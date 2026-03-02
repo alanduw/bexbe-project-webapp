@@ -1,0 +1,73 @@
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.stat-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px;
+}
+
+.stat-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dimmer);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+.stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    font-family: var(--mono);
+    line-height: 1;
+}
+.stat-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 4px;
+}
+
+.stats-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.velocity-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 80px;
+    margin-top: 8px;
+}
+.velocity-bar {
+    flex: 1;
+    border-radius: 3px 3px 0 0;
+    background: var(--accent-dim);
+    border: 1px solid rgba(94,184,255,0.3);
+    position: relative;
+    min-width: 24px;
+    transition: background 0.2s;
+}
+.velocity-bar:hover {
+    background: rgba(94,184,255,0.25);
+}
+.velocity-bar-label {
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-dimmer);
+    white-space: nowrap;
+}
+.velocity-sublabel {
+    fontFamily: "var(--mono)";
+    font-size: 11px;
+    color: var(--text-dim);
+}
