@@ -15,10 +15,12 @@ export function NewIssueModal({ onClose, onSave, sprints, people, accessToken })
         points: POINTS[2],
         tags: ""
     });
+    const [loading, setLoading] = useState(false);
 
     const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
     const save = () => {
         if (!form.title.trim()) return;
+        setLoading(true);
         addIssue({
             ...form,
             assignee: Number(form.assignee),
@@ -36,7 +38,8 @@ export function NewIssueModal({ onClose, onSave, sprints, people, accessToken })
                 });
                 onClose();
             })
-            .catch(err => {console.log(err)});
+            .catch(err => {console.log(err)})
+            .finally(() => {setLoading(false)});
     };
     const addIssue = async (issue) => {
         const res = await fetch(`${API_BASE}/api/issues?accessToken=${accessToken}`, {
@@ -108,7 +111,13 @@ export function NewIssueModal({ onClose, onSave, sprints, people, accessToken })
                     </div>
                     <div className="modal-footer">
                         <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
-                        <button className="btn btn-primary" onClick={save}>Create Issue</button>
+                        <button className="btn btn-primary" onClick={save} disabled={loading}>
+                            {loading ? (
+                                <span className="spinner" />
+                            ) : (
+                                "Create Issue"
+                            )}
+                        </button>
                     </div>
                 </div>
             </div>

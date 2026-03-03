@@ -10,10 +10,13 @@ export function ProjectCreate() {
         ownerLastName: "",
         ownerRole: "",
     });
+    const [loading, setLoading] = useState(false);
+
     const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
     const save = (isDemo) => {
         if (!form.ownerFirstName.trim()) return;
         if (!form.ownerLastName.trim()) return;
+        setLoading(true);
         const useSeed = isDemo;
         addProject({...form, useSeed})
             .then(data => {
@@ -21,7 +24,8 @@ export function ProjectCreate() {
                 localStorage.setItem("appState", JSON.stringify(data));
                 navigate("/app");
             })
-            .catch(err => {console.log(err)});
+            .catch(err => {console.log(err)})
+            .finally(() => {setLoading(false)});
     };
 
     const addProject = async (project) => {
@@ -55,8 +59,20 @@ export function ProjectCreate() {
                             </div>
 
                             <div className="modal-footer">
-                                <button className="btn btn-primary" onClick={() => save(false)}>Create Empty Project</button>
-                                <button className="btn btn-primary" onClick={() => save(true)}>Create Demo Project</button>
+                                <button className="btn btn-primary" onClick={() => save(false)} disabled={loading}>
+                                    {loading ? (
+                                        <span className="spinner" />
+                                    ) : (
+                                        "Create Empty Project"
+                                    )}
+                                </button>
+                                <button className="btn btn-primary" onClick={() => save(true)} disabled={loading}>
+                                    {loading ? (
+                                        <span className="spinner" />
+                                    ) : (
+                                        "Create Demo Project"
+                                    )}
+                                </button>
                             </div>
                         </div>
                     </div>

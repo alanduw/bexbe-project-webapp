@@ -6,10 +6,12 @@ export function NewSprintModal({onClose, onSave, accessToken}) {
     const today = new Date().toISOString().slice(0, 10);
     const twoWeeks = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
     const [form, setForm] = useState({ name: "", start: today, end: twoWeeks, goal: "" });
+    const [loading, setLoading] = useState(false);
 
     const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
     const save = () => {
         if (!form.name.trim()) return;
+        setLoading(true);
         addSprint({...form, accessToken})
             .then(data => {
                 console.log("NEW SPRINT MODAL");
@@ -18,7 +20,8 @@ export function NewSprintModal({onClose, onSave, accessToken}) {
                 onSave(data);
                 onClose();
             })
-            .catch(err => {console.log(err)});
+            .catch(err => {console.log(err)})
+            .finally(() => {setLoading(false)});
     };
     const addSprint = async (sprint) => {
         const res = await fetch(`${API_BASE}/api/sprints?accessToken=${accessToken}`, {
@@ -59,7 +62,13 @@ export function NewSprintModal({onClose, onSave, accessToken}) {
                     </div>
                     <div className="modal-footer">
                         <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
-                        <button className="btn btn-primary" onClick={save}>Create Sprint</button>
+                        <button className="btn btn-primary" onClick={save} disabled={loading}>
+                            {loading ? (
+                                <span className="spinner" />
+                            ) : (
+                                "Create Sprint"
+                            )}
+                        </button>
                     </div>
                 </div>
             </div>

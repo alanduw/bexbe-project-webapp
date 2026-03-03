@@ -7,10 +7,13 @@ export function NewUserModal({accessToken, onClose, onSave}) {
         userLastName: "",
         userRole: "",
     });
+    const [loading, setLoading] = useState(false);
+
     const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
     const save = () => {
         if (!form.userFirstName.trim()) return;
         if (!form.userLastName.trim()) return;
+        setLoading(true);
         addUser({...form, accessToken})
             .then(data => {
                 onSave({
@@ -21,7 +24,8 @@ export function NewUserModal({accessToken, onClose, onSave}) {
                 });
                 onClose();
             })
-            .catch(err => {console.log(err)});
+            .catch(err => {console.log(err)})
+            .finally(() => {setLoading(false)});
     };
 
     const addUser = async (user) => {
@@ -56,7 +60,13 @@ export function NewUserModal({accessToken, onClose, onSave}) {
 
                             <div className="modal-footer">
                                 <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
-                                <button className="btn btn-primary" onClick={save}>Create User</button>
+                                <button className="btn btn-primary" onClick={save} disabled={loading}>
+                                    {loading ? (
+                                        <span className="spinner" />
+                                    ) : (
+                                        "Create User"
+                                    )}
+                                </button>
                             </div>
                         </div>
                     </div>

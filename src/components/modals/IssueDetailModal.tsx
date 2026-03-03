@@ -6,13 +6,17 @@ import {API_BASE} from "../../api/api.ts";
 
 export function IssueDetailModal({ issue, people, onClose, onUpdate, sprints }) {
     const [status, setStatus] = useState(issue.status);
+    const [loading, setLoading] = useState(false);
+
     const save = () => {
+        setLoading(true);
         updateIssue({...issue, status})
             .then(data => {
                 onUpdate({...data, tags: data.tags.split(",").map(t => t.trim())});
                 onClose();
             })
-            .catch(err => {console.log(err)});
+            .catch(err => {console.log(err)})
+            .finally(() => {setLoading(false)});
     };
     const updateIssue = async (issue) => {
         const res = await fetch(`${API_BASE}/api/issues/${issue.id}`, {
@@ -57,7 +61,13 @@ export function IssueDetailModal({ issue, people, onClose, onUpdate, sprints }) 
                 </div>
                 <div className="modal-footer">
                     <button className="btn btn-ghost" onClick={onClose}>Close</button>
-                    <button className="btn btn-primary" onClick={save}>Update Status</button>
+                    <button className="btn btn-primary" onClick={save} disabled={loading}>
+                        {loading ? (
+                            <span className="spinner" />
+                        ) : (
+                            "Update Status"
+                        )}
+                    </button>
                 </div>
             </div>
         </div>
